@@ -10,7 +10,7 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator initialRouteName='Tables'>
         <Stack.Screen name="MainMenu" component={MainMenu} options={{headerShown: false}}/>
-        <Stack.Screen name="Tables" component={Tables} /> 
+        <Stack.Screen name="Tables" component={Tables} options={{headerShown: false}}/> 
       </Stack.Navigator>
     </NavigationContainer>
   );

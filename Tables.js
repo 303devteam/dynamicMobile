@@ -1,4 +1,5 @@
 
+import { StatusBar } from "expo-status-bar";
 import { useCustomFonts } from "./assets/fonts/expo-fonts";
 import { StyleSheet, Text, View, Image, ScrollView } from 'react-native';
 
@@ -6,34 +7,38 @@ export default function Tables({navigation}) {
     useCustomFonts()
 
     return(
+        
         <>
-            
-            <View style={styles.header}>
-                <View style={styles.leftContent}>
+        <StatusBar backgroundColor="#201E21"></StatusBar>
+        <View style={styles.header}>
+            <View style={styles.headerContent}>
+                <View style={styles.poolTable}>
                     <Image
-                        source={require('./assets/images/dynamiclogo.png')}
-                        style={{ width: 100, height: 100 }}
-                    />
+                        source={require('./assets/images/poolTable.png')}
+                        style={{ width: 60, height: 57 }} />
                 </View>
+                <Text style={styles.headerText}>Tables</Text>
+            </View>
+        </View><ScrollView style={{ flex: 1, backgroundColor: '#201E21' }}>
+                <View style={styles.container}>
+                    <View style={styles.stack}>
+                        {Array(10).fill().map((_, index) => (
+                            <View key={index} style={styles.square}>
+                                <Text style={styles.squareText}>Table: {index + 1}</Text>
+                                <View style={styles.rightSquareContent}>
+                                    <View style={styles.circle}></View>
+                                    
+                                </View>
 
-                <View style={styles.rightContent}>
-                    <Text style={styles.headerText}>Tables</Text>
-                    <View style={styles.poolTable}>
-                        <Image
-                            source={require('./assets/images/poolTable.png')}
-                            style={{ width: 60, height: 57 }}
-                        />
+                            </View>
+                        ))}
                     </View>
                 </View>
-
-            </View>
-
-
-            <View style={styles.container}>
-                
-            </View>
-
+            </ScrollView>
+            
         </>
+      
+
     );
        
 }
@@ -45,6 +50,9 @@ const styles = StyleSheet.create({
         flex: 1,
         color: '#FFFFFF',
         fontSize: 30,
+        paddingRight: 10,
+        paddingTop: 5,
+        paddingLeft: 8
 
         
     },
@@ -53,15 +61,21 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        padding: 16
+        padding: 16,
+        marginTop: 50
+        
+
+        
+    },
+    
+    headerContent:{
+        flexDirection:'row',
+        display: 'flex',
+        justifyContent: 'space-between',
         
     },
 
    
-    leftContent: {
-        flexDirection: 'row', 
-        alignItems: 'center',
-      },
 
 
     container: {
@@ -69,11 +83,34 @@ const styles = StyleSheet.create({
         backgroundColor: '#201E21',
         alignItems: 'center',
         justifyContent: 'center',
-        paddingTop: 100
+        paddingTop: 40
       },
 
-    poolTable: {
-       
+    square: {
+        display: 'flex',
+        width: 349,
+        height: 55,
+        backgroundColor: 'white',
+        borderRadius: 20,
+        marginBottom: 21
+    },
+
+    squareText:{
+        display: 'flex',
+        textAlign: "left",
+        marginLeft: 12,
+        marginTop: 13,
+        fontSize: 20
+    },
+
+    circle:{
+        display: 'flex',
+        height: 8,
+        width: 8,
+        borderRadius: 80,
+        backgroundColor: 'green',
+        marginLeft: 241,
+        
     }
 
 })
