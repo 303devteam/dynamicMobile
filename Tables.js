@@ -1,7 +1,9 @@
 
-import { StatusBar } from "expo-status-bar";
+import { StatusBar } from 'expo-status-bar';
 import { useCustomFonts } from "./assets/fonts/expo-fonts";
-import { StyleSheet, Text, View, Image, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity } from 'react-native';
+import Modal from '@mui/joy/Modal';
+
 
 export default function Tables({navigation}) {
     useCustomFonts()
@@ -9,27 +11,31 @@ export default function Tables({navigation}) {
     return(
         
         <>
-        <StatusBar backgroundColor="#201E21"></StatusBar>
-        <View style={styles.header}>
-            <View style={styles.headerContent}>
-                <View style={styles.poolTable}>
-                    <Image
-                        source={require('./assets/images/poolTable.png')}
-                        style={{ width: 60, height: 57 }} />
+    	    <StatusBar backgroundColor='#201E21'></StatusBar>
+            <View style={styles.header}>
+                <View style={styles.headerContent}>
+                    <View style={styles.poolTable}>
+                        <Image
+                            source={require('./assets/images/poolTable.png')}
+                            style={{ width: 60, height: 57 }} />
+                    </View>
+                    <Text style={styles.headerText}>Tables</Text>
                 </View>
-                <Text style={styles.headerText}>Tables</Text>
             </View>
-        </View><ScrollView style={{ flex: 1, backgroundColor: '#201E21' }}>
+            <ScrollView style={{ flex: 1, backgroundColor: '#201E21' }}>
                 <View style={styles.container}>
                     <View style={styles.stack}>
                         {Array(10).fill().map((_, index) => (
-                            <View key={index} style={styles.square}>
+                            <TouchableOpacity 
+                                key={index} 
+                                style={styles.button} 
+                                onPress={() => popupModal(index+1)}>
                                 <View style={styles.textContainer}>
                                     <Text style={styles.squareText}>Table: {index + 1}</Text>
                                 </View>
                                 <View style={styles.circle}></View>
                                 <Text style={styles.availabilityText}>Free</Text>
-                            </View>
+                            </TouchableOpacity>
                         ))}
                     </View>
                 </View>
@@ -78,7 +84,7 @@ const styles = StyleSheet.create({
         paddingTop: 40
       },
 
-    square: {
+    button: {
         display: 'flex',
         flexDirection: 'row',
         width: 349,
