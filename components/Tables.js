@@ -1,22 +1,31 @@
-
 import { StatusBar } from 'expo-status-bar';
-import { useCustomFonts } from "./assets/fonts/expo-fonts";
+import { useState, useEffect } from 'react';
+import useCustomFonts from "../assets/fonts/expo-fonts";
 import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity } from 'react-native';
 import Modal from '@mui/joy/Modal';
 
 
 export default function Tables({navigation}) {
-    useCustomFonts()
+    const [fontLoaded, setFontLoaded] = useState(false)
+
+    useEffect(() => {
+      useCustomFonts().then(() => {
+        setFontLoaded(true)
+      })
+    })
+
+    if (!fontLoaded) {
+      return null
+    }
 
     return(
-        
         <>
     	    <StatusBar backgroundColor='#201E21'></StatusBar>
             <View style={styles.header}>
                 <View style={styles.headerContent}>
                     <View style={styles.poolTable}>
                         <Image
-                            source={require('./assets/images/poolTable.png')}
+                            source={require('../assets/images/poolTable.png')}
                             style={{ width: 60, height: 57 }} />
                     </View>
                     <Text style={styles.headerText}>Tables</Text>
@@ -41,8 +50,6 @@ export default function Tables({navigation}) {
                 </View>
             </ScrollView>
         </>
-      
-
     );
        
 }

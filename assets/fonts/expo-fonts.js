@@ -1,6 +1,7 @@
-import { useFonts } from 'expo-font';
+import * as Font from 'expo-font'
 
-export const useCustomFonts = () =>
-  useFonts({
+export default async function useCustomFonts() {
+  return await Font.loadAsync({
     Montserrat: require('./Montserrat.otf')
-  });
+  })
+}
