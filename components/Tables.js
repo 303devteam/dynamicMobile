@@ -1,113 +1,113 @@
-import { StatusBar } from 'expo-status-bar';
+
 import { useState, useEffect } from 'react';
 import useCustomFonts from "../assets/fonts/expo-fonts";
 import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity } from 'react-native';
-import Modal from '@mui/joy/Modal';
+import { Dialog } from '@rneui/themed';
 
 
 export default function Tables({navigation}) {
     const [fontLoaded, setFontLoaded] = useState(false)
+    const [open, setOpen] = useState(false)
 
     useEffect(() => {
       useCustomFonts().then(() => {
         setFontLoaded(true)
       })
-    })
+    }, [])
 
     if (!fontLoaded) {
       return null
     }
 
     return(
-        <>
-    	    <StatusBar backgroundColor='#201E21'></StatusBar>
+        <View style={styles.container}>
             <View style={styles.header}>
-                <View style={styles.headerContent}>
-                    <View style={styles.poolTable}>
-                        <Image
-                            source={require('../assets/images/poolTable.png')}
-                            style={{ width: 60, height: 57 }} />
-                    </View>
-                    <Text style={styles.headerText}>Tables</Text>
-                </View>
+                <Image 
+                    source={require('../assets/images/poolTable2.png')}
+                    style={{width: 60, height: 55}}
+                />
+                <Text style={styles.headerText}>TABLES</Text>
             </View>
-            <ScrollView style={{ flex: 1, backgroundColor: '#201E21' }}>
-                <View style={styles.container}>
-                    <View style={styles.stack}>
-                        {Array(10).fill().map((_, index) => (
-                            <TouchableOpacity 
-                                key={index} 
-                                style={styles.button} 
-                                onPress={() => popupModal(index+1)}>
+            <ScrollView style={styles.innerContainer}>
+                {Array(10).fill().map((_, index) => (
+                        <>
+                            <TouchableOpacity
+                                activeOpacity={0.7}
+                                key={index}
+                                style={styles.button}
+                                onPress={() => setOpen(index + 1)}>
                                 <View style={styles.textContainer}>
                                     <Text style={styles.squareText}>Table: {index + 1}</Text>
                                 </View>
                                 <View style={styles.circle}></View>
                                 <Text style={styles.availabilityText}>Free</Text>
                             </TouchableOpacity>
-                        ))}
-                    </View>
-                </View>
+                            <Dialog
+                                isVisible={open === index +1}
+                                onBackdropPress={() => setOpen(false)}
+                                overlayStyle={styles.modal}
+                                style={styles.dialogContainer}
+                            >
+                                <Dialog.Title style={styles.dialogTitle} title={`Table: ${index+1}`} />
+                                    <Text>Player Type: </Text>
+                                    <Text>Timer: </Text>
+                                    <Text>Revenue:  </Text>
+                            </Dialog>
+                        </>
+                    ))}
             </ScrollView>
-        </>
+        </View>
     );
        
 }
 
 const styles = StyleSheet.create({
-
-    headerText:{
-        flex: 1,
+    container: {
+        width: '100%',
+        height: '100%',
+        backgroundColor: '#201E21',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        padding: 20
+    },
+    header: {
+        display: 'flex',
+        flexDirection: 'row',
+        marginTop: 50,
+        width: '100%',
+        alignItems: 'center',
+    },
+    headerText: {
+        fontFamily: 'Montserrat',
         color: '#FFFFFF',
         fontSize: 30,
-        paddingRight: 10,
-        paddingTop: 5,
-        paddingLeft: 8        
+        paddingLeft: 8       
     },
-    header:{    
-        backgroundColor: '#201E21',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: 16,
-        marginTop: 32     
+    innerContainer: {
+        width: '100%',
+        marginTop: 50
     },
-
     textContainer:{
-        flex:1   
+        flex:1 
     },
-    
-    headerContent:{
-        flexDirection:'row',
-        display: 'flex',
-        justifyContent: 'space-between',
-    },
-
-    container: {
-        flex: 1,
-        backgroundColor: '#201E21',
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingTop: 40
-      },
-
     button: {
         display: 'flex',
         flexDirection: 'row',
-        width: 349,
+        width: '100%',
         height: 55,
         backgroundColor: 'white',
         borderRadius: 20,
         marginBottom: 21
     },
-
     squareText:{
         textAlign: "left",
         marginLeft: 12,
         marginTop: 13,
-        fontSize: 20
+        fontSize: 20,
+        fontFamily: 'Montserrat'
     },
-
     circle:{
         height: 8,
         width: 8,
@@ -118,12 +118,27 @@ const styles = StyleSheet.create({
         textAlign: "center",
         justifyContent: "center",   
     },
-
     availabilityText:{
         fontSize: 14,
         paddingTop: 20,
         paddingLeft: 10,
         paddingRight: 20,
-        color: 'green'
+        color: 'green',
+        fontFamily: 'Montserrat'
+    },
+    modal: {
+        width: 335,
+        height: 210,
+        backgroundColor: 'white',
+        alignSelf: 'center',
+        borderRadius: 20,
+    },
+
+    dialogContainer:{
+        display: 'flex'
+    },
+
+    dialogTitle:{
+        textAlign: 'center'
     }
 })

@@ -12,12 +12,10 @@ export default function App() {
   const Stack = createNativeStackNavigator()
 
   return (
-    
     <NavigationContainer>
-   
       <Stack.Navigator initialRouteName='MainMenu'>
         <Stack.Screen 
-          name="MainMenu" 
+          name="MainMenu"
           component={MainMenu} 
           options={{headerShown: false}}
         />
