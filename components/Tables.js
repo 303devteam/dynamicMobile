@@ -46,12 +46,12 @@ export default function Tables({navigation}) {
                                 isVisible={open === index +1}
                                 onBackdropPress={() => setOpen(false)}
                                 overlayStyle={styles.modal}
-                                style={styles.dialogContainer}
+                                
                             >
-                                <Dialog.Title style={styles.dialogTitle} title={`Table: ${index+1}`} />
-                                    <Text>Player Type: </Text>
-                                    <Text>Timer: </Text>
-                                    <Text>Revenue:  </Text>
+                                <Text style={styles.dialogTitle}>Table: {index + 1}</Text>
+                                <Text style={styles.dialogText}>Player Type: </Text>
+                                <Text style={styles.dialogText}>Timer: </Text>
+                                <Text style={styles.dialogText}>Revenue:  </Text>
                             </Dialog>
                         </>
                     ))}
@@ -127,6 +127,7 @@ const styles = StyleSheet.create({
         fontFamily: 'Montserrat'
     },
     modal: {
+        display: 'flex',
         width: 335,
         height: 210,
         backgroundColor: 'white',
@@ -134,11 +135,19 @@ const styles = StyleSheet.create({
         borderRadius: 20,
     },
 
-    dialogContainer:{
-        display: 'flex'
-    },
+  
 
     dialogTitle:{
-        textAlign: 'center'
+        textAlign: 'center',
+        justifyContent:'center',
+        fontFamily: 'Montserrat'
+        
+    },
+
+    dialogText: {
+        justifyContent: 'left',
+        marginBottom: 10,
+        marginTop: 10,
+        fontFamily: 'Montserrat'
     }
 })
