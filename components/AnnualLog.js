@@ -1,13 +1,21 @@
 import { useState, useEffect } from "react"
 import { StyleSheet, View, ScrollView, Text, Image } from "react-native"
 import useCustomFonts from "../assets/fonts/expo-fonts"
+import axios from "axios"
 
 export default function AnnualLog({navigation}) {
     const [fontLoaded, setFontLoaded] = useState(false)
+    const [annaul, setAnnual] = useState([])
 
     useEffect(() => {
         useCustomFonts().then(() => {
           setFontLoaded(true)
+        })
+      }, [])
+
+      useEffect(() => {
+        axios.get('http://localhost:8000/annual').then(res => {
+            setAnnual(res.data)
         })
       }, [])
   
@@ -34,34 +42,19 @@ export default function AnnualLog({navigation}) {
                         <Text style={styles.tableHeadTextv2}>TOTAL</Text>
                     </View>
                 </View>
-                <View style={styles.tableEntry}>
-                    <Text style={styles.tableEntryText}>2023</Text>
-                    <Text style={styles.tableEntryText}>570KM</Text>
-                    <Text style={styles.tableEntryText}>570KM</Text>
-                    <Text style={styles.tableEntryText}>570KM</Text>
-                    <Text style={styles.tableEntryText}>1140KM</Text>
-                </View>
-                <View style={styles.tableEntry}>
-                    <Text style={styles.tableEntryText}>2023</Text>
-                    <Text style={styles.tableEntryText}>570KM</Text>
-                    <Text style={styles.tableEntryText}>570KM</Text>
-                    <Text style={styles.tableEntryText}>570KM</Text>
-                    <Text style={styles.tableEntryText}>1140KM</Text>
-                </View>
-                <View style={styles.tableEntry}>
-                    <Text style={styles.tableEntryText}>2023</Text>
-                    <Text style={styles.tableEntryText}>570KM</Text>
-                    <Text style={styles.tableEntryText}>570KM</Text>
-                    <Text style={styles.tableEntryText}>570KM</Text>
-                    <Text style={styles.tableEntryText}>1140KM</Text>
-                </View>
-                <View style={styles.tableEntry}>
-                    <Text style={styles.tableEntryText}>2023</Text>
-                    <Text style={styles.tableEntryText}>570KM</Text>
-                    <Text style={styles.tableEntryText}>570KM</Text>
-                    <Text style={styles.tableEntryText}>570KM</Text>
-                    <Text style={styles.tableEntryText}>1140KM</Text>
-                </View>
+                {
+                    annaul.map((item, index) => {
+                        return(
+                        <View style={styles.tableEntry} key={index}>
+                            <Text style={styles.tableEntryText}>{item.year}</Text>
+                            <Text style={styles.tableEntryText}>{item.commercialRev}KM</Text>
+                            <Text style={styles.tableEntryText}>{item.memberRev}KM</Text>
+                            <Text style={styles.tableEntryText}>{item.privateRev}KM</Text>
+                            <Text style={styles.tableEntryText}>{item.total}KM</Text>
+                        </View>
+                        )
+                    })
+                }
             </ScrollView>
             <View style={styles.tableFooter}>
                 <Text style={{fontSize: 15, fontFamily: 'Montserrat-Bold'}}>TOTAL:</Text>
