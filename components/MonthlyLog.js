@@ -40,7 +40,7 @@ export default function MonthlyLog({navigation}) {
                         <Text style={styles.tableHeadText}>{'Date'}</Text>
                         <Text style={styles.tableHeadText}>{'Commercial'}</Text>
                         <Text style={styles.tableHeadText}>{'Member'}</Text>
-                        <Text style={styles.tableHeadText}>Private</Text>
+                        <Text style={styles.tableHeadText}>priv</Text>
                         
                     </View>
                 </View>
