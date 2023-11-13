@@ -30,8 +30,21 @@ export default function MonthlyLog({navigation}) {
                 <SelectDropdown
                     data = {year}
                     buttonStyle={styles.yearButton}
+
                 />
             </View>
+
+            <ScrollView style={styles.table} stickyHeaderIndices={[0]}>
+                <View>
+                <View style={styles.tableHead}>
+                        <Text style={styles.tableHeadText}>{'Date'}</Text>
+                        <Text style={styles.tableHeadText}>{'Commercial'}</Text>
+                        <Text style={styles.tableHeadText}>{'Member'}</Text>
+                        <Text style={styles.tableHeadText}>Private</Text>
+                        
+                    </View>
+                </View>
+            </ScrollView>
         </View>
     )
 }
@@ -70,7 +83,6 @@ export const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
-        
         width: 340
     },
 
@@ -87,6 +99,37 @@ export const styles = StyleSheet.create({
         height: 36,
         width: 140,
         marginLeft: 10
-    }
+    },
+
+
+    table:{
+        backgroundColor: 'white',
+        marginTop: 50,
+        width: '100%',
+        minHeight: 500,
+        maxHeight: 500,
+        position: 'relative'
+    },
+    tableHead: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        width: '100%',
+        borderBottomColor: '#C0C0C0',
+        borderBottomWidth: 1,
+        paddingBottom: 10,
+        paddingTop: 10,
+        backgroundColor: 'white',
+        paddingRight:50
+    },
+
+    tableHeadText: {
+        display: 'flex',
+        width: '25%',
+        textAlign: 'center',
+        fontSize: 15,
+        fontFamily: 'Montserrat',
+        color: '#676767'
+    },
 
 })
