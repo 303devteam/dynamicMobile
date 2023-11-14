@@ -6,6 +6,7 @@ import SelectDropdown from "react-native-select-dropdown";
 export default function MonthlyLog({navigation}) {
     const date = new Date()
     const months = ["January", "February", "March", "June", "July", "August", "September", "October", "November", "December"];
+    const years = ["2023", "2024"]
     const [year, setYear] = useState(date.getFullYear())
     const [month, setMonth] = useState(date.getMonth()+1) 
     
@@ -17,34 +18,65 @@ export default function MonthlyLog({navigation}) {
                     style={{width:53, height:53}}
                 />
                 <Text style={styles.headerText}>MONTHLY LOG</Text>
-               
+
                 
             </View>
 
             <View style={styles.dropdowns}>
                 <SelectDropdown
-                    data = {month}
+                    data = {months}
                     buttonStyle={styles.monthButton}
+                    defaultButtonText="October"
+                    
                     
                 />
+                
                 <SelectDropdown
-                    data = {year}
+                    data = {years}
                     buttonStyle={styles.yearButton}
+                    defaultButtonText="2023"
 
                 />
+                
             </View>
 
             <ScrollView style={styles.table} stickyHeaderIndices={[0]}>
                 <View>
-                <View style={styles.tableHead}>
-                        <Text style={styles.tableHeadText}>{'Date'}</Text>
-                        <Text style={styles.tableHeadText}>{'Commercial'}</Text>
-                        <Text style={styles.tableHeadText}>{'Member'}</Text>
-                        <Text style={styles.tableHeadText}>priv</Text>
-                        
+                    <View style={styles.tableHead}>
+                        <Text style={styles.tableHeadText}>Date</Text>
+                        <Text style={styles.tableHeadText}>Comm</Text>
+                        <Text style={styles.tableHeadText}>Member</Text>
+                        <Text style={styles.tableHeadText}>Private</Text>
+                        <Text style={styles.tableHeadText}>Total</Text>
+                    </View>
+
+                    <View style={styles.tableEntry}>
+                        <Text style={styles.tableEntryText}>01/10/23</Text>
+                        <Text style={styles.tableEntryText}>523KM</Text>
+                        <Text style={styles.tableEntryText}>300KM</Text>
+                        <Text style={styles.tableEntryText}>700KM</Text>
+                        <Text style={styles.tableEntryText}>1500KM</Text>
+                    </View>
+                    <View style={styles.tableEntry}>
+                        <Text style={styles.tableEntryText}>01/10/23</Text>
+                        <Text style={styles.tableEntryText}>523KM</Text>
+                        <Text style={styles.tableEntryText}>300KM</Text>
+                        <Text style={styles.tableEntryText}>700KM</Text>
+                        <Text style={styles.tableEntryText}>1500KM</Text>
+                    </View>
+                    <View style={styles.tableEntry}>
+                        <Text style={styles.tableEntryText}>01/10/23</Text>
+                        <Text style={styles.tableEntryText}>523KM</Text>
+                        <Text style={styles.tableEntryText}>300KM</Text>
+                        <Text style={styles.tableEntryText}>700KM</Text>
+                        <Text style={styles.tableEntryText}>1500KM</Text>
                     </View>
                 </View>
             </ScrollView>
+            <View style={styles.tableFooter}>
+                <Text style={{fontSize: 15, fontFamily: 'Montserrat-Bold'}}>TOTAL:</Text>
+                <Text style={{fontSize: 15, fontFamily: 'Montserrat'}}>90KM</Text>
+            </View>
         </View>
     )
 }
@@ -90,7 +122,8 @@ export const styles = StyleSheet.create({
         borderRadius: 20,
         height: 36,
         width: 140,
-        marginRight: 10
+        marginRight: 10,
+        
         
     },
     
@@ -120,16 +153,51 @@ export const styles = StyleSheet.create({
         paddingBottom: 10,
         paddingTop: 10,
         backgroundColor: 'white',
-        paddingRight:50
+        paddingRight:90,
+        
     },
 
     tableHeadText: {
         display: 'flex',
-        width: '25%',
+        width: '28%',
         textAlign: 'center',
         fontSize: 15,
         fontFamily: 'Montserrat',
         color: '#676767'
     },
+
+    tableEntry: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        width: '100%',
+        paddingBottom: 15,
+        paddingTop: 15,
+        borderBottomColor: '#C0C0C0',
+        borderBottomWidth: 1,
+        paddingRight: 65
+    },
+
+    tableEntryText: {
+        width: '25%',
+        textAlign: 'center',
+        fontFamily: 'Montserrat',
+        fontSize: 15,
+    },
+
+    tableFooter: {
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        paddingBottom: 15,
+        paddingTop: 15,
+        paddingRight: 10,
+        paddingLeft: 20,
+        backgroundColor: 'white',
+        borderTopColor: '#C0C0C0',
+        borderTopWidth: 1,
+    },
+    
 
 })
