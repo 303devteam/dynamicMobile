@@ -13,7 +13,7 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName='MonthlyLog'>
+      <Stack.Navigator initialRouteName='MainMenu'>
         <Stack.Screen 
           name="MainMenu"
           component={MainMenu} 
