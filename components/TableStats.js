@@ -30,7 +30,6 @@ export default function TableStats({navigation}) {
 
                 <Text style={styles.headerText}>TABLE STATS</Text>
             </View>
-
             <View style={styles.chartContainer}>
                 <Text style={styles.containerText}>TABLE REVENUE</Text>
                <VictoryChart>
@@ -47,10 +46,8 @@ export default function TableStats({navigation}) {
                         >                             
                         </VictoryBar>
                     </VictoryGroup>
-               </VictoryChart>
-                             
+               </VictoryChart>   
             </View>
-
         </View>
     )
 }
@@ -61,7 +58,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#201E21',
         width: '100%',
         height: '100%',
-        display: 'flex'
+        display: 'flex',
+        alignItems: 'center'
     },
     header: {
         display: 'flex',
@@ -70,19 +68,13 @@ const styles = StyleSheet.create({
         width: '100%',
         height: '20%',
         alignItems: 'center',
-        
-        
-        
     },
-
     headerText:{
-        
         color: 'white',
         fontSize: 30,
         paddingLeft: 10,
-        fontFamily:'MontSerrat'
+        fontFamily:'Montserrat'
     }, 
-    
     chartContainer:{
         borderWidth: 1, 
         borderRadius: 10, 
@@ -97,12 +89,8 @@ const styles = StyleSheet.create({
         width: 370,
         height: 400
     },
-
     containerText:{
         fontSize: 25,
-        fontFamily: 'MontSerrat'
+        fontFamily: 'Montserrat'
     }
-
-   
-   
 })

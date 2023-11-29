@@ -3,12 +3,9 @@ import { StyleSheet } from "react-native";
 import useCustomFonts from "../assets/fonts/expo-fonts";
 import { useEffect, useState } from "react";
 import { ScrollView } from "react-native";
-import axios, { Axios } from "axios";
+import axios from "axios";
 
 export default function DailyLog({navigation}) {
-    
-
-   
     const [dailyLogs, setDailyLogs] = useState([]);
 
     useEffect(() =>{
@@ -22,7 +19,6 @@ export default function DailyLog({navigation}) {
             })
     })
     
-
     return(
         <View style={styles.container}>
             <View style={styles.header}>
@@ -42,37 +38,13 @@ export default function DailyLog({navigation}) {
                     </View>
                 </View>
                 {dailyLogs.map(log => ( 
-                <View style={styles.tableEntry}>
-                    <Text style={styles.tableEntryText}>{log.table_id}</Text>
-                    <Text style={styles.tableEntryText}>{log.game_time}</Text>
-                    <Text style={styles.tableEntryText}>{log.player_type}</Text>
-                    <Text style={styles.tableEntryText}>{log.revenue}KM</Text>
-                </View>
+                    <View style={styles.tableEntry}>
+                        <Text style={styles.tableEntryText}>{log.table_id}</Text>
+                        <Text style={styles.tableEntryText}>{log.game_time}</Text>
+                        <Text style={styles.tableEntryText}>{log.player_type}</Text>
+                        <Text style={styles.tableEntryText}>{log.revenue}KM</Text>
+                    </View>
                 ))}
-                <View style={styles.tableEntry}>
-                    <Text style={styles.tableEntryText}>1</Text>
-                    <Text style={styles.tableEntryText}>1:15</Text>
-                    <Text style={styles.tableEntryText}>Member</Text>
-                    <Text style={styles.tableEntryText}>15KM</Text>
-                </View>
-                <View style={styles.tableEntry}>
-                    <Text style={styles.tableEntryText}>1</Text>
-                    <Text style={styles.tableEntryText}>1:15</Text>
-                    <Text style={styles.tableEntryText}>Member</Text>
-                    <Text style={styles.tableEntryText}>15KM</Text>
-                </View>
-                <View style={styles.tableEntry}>
-                    <Text style={styles.tableEntryText}>1</Text>
-                    <Text style={styles.tableEntryText}>1:15</Text>
-                    <Text style={styles.tableEntryText}>Member</Text>
-                    <Text style={styles.tableEntryText}>15KM</Text>
-                </View>
-                <View style={styles.tableEntry}>
-                    <Text style={styles.tableEntryText}>1</Text>
-                    <Text style={styles.tableEntryText}>1:15</Text>
-                    <Text style={styles.tableEntryText}>Member</Text>
-                    <Text style={styles.tableEntryText}>15KM</Text>
-                </View>
             </ScrollView>
             <View style={styles.tableFooter}>
                 <Text style={{fontSize: 15, fontFamily: 'Montserrat-Bold'}}>TOTAL:</Text>

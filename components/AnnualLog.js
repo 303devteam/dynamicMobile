@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import { StyleSheet, View, ScrollView, Text, Image } from "react-native"
 import useCustomFonts from "../assets/fonts/expo-fonts"
-//import axios from "axios"
+import axios from "axios"
 
 export default function AnnualLog({navigation}) {
     const [fontLoaded, setFontLoaded] = useState(false)
@@ -13,12 +13,6 @@ export default function AnnualLog({navigation}) {
         })
       }, [])
 
-      //useEffect(() => {
-        //axios.get('http://localhost:8000/annual').then(res => {
-          //  setAnnual(res.data)
-        //})
-      //}, [])
-  
       if (!fontLoaded) {
         return null
       }

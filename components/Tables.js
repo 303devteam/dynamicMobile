@@ -30,10 +30,9 @@ export default function Tables({navigation}) {
             </View>
             <ScrollView style={styles.innerContainer}>
                 {Array(10).fill().map((_, index) => (
-                        <>
+                        <View key={index}>
                             <TouchableOpacity
                                 activeOpacity={0.7}
-                                key={index}
                                 style={styles.button}
                                 onPress={() => setOpen(index + 1)}>
                                 <View style={styles.textContainer}>
@@ -46,14 +45,13 @@ export default function Tables({navigation}) {
                                 isVisible={open === index +1}
                                 onBackdropPress={() => setOpen(false)}
                                 overlayStyle={styles.modal}
-                                
                             >
                                 <Text style={styles.dialogTitle}>Table: {index + 1}</Text>
                                 <Text style={styles.dialogText}>Player Type: </Text>
                                 <Text style={styles.dialogText}>Timer: </Text>
                                 <Text style={styles.dialogText}>Revenue:  </Text>
                             </Dialog>
-                        </>
+                        </View>
                     ))}
             </ScrollView>
         </View>
@@ -129,25 +127,21 @@ const styles = StyleSheet.create({
     modal: {
         display: 'flex',
         width: 335,
-        height: 210,
+        height: 180,
         backgroundColor: 'white',
         alignSelf: 'center',
         borderRadius: 20,
     },
-
-  
-
     dialogTitle:{
         textAlign: 'center',
         justifyContent:'center',
         fontFamily: 'Montserrat'
-        
     },
-
     dialogText: {
-        justifyContent: 'left',
+        textAlign: 'left',
         marginBottom: 10,
         marginTop: 10,
-        fontFamily: 'Montserrat'
+        fontFamily: 'Montserrat',
+        fontSize: 16
     }
 })
