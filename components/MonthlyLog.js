@@ -1,13 +1,63 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { StyleSheet, View, ScrollView, Text, Image } from "react-native"
 import SelectDropdown from "react-native-select-dropdown";
+import axios, { Axios } from "axios";
+
 
 
 export default function MonthlyLog({navigation}) {
     const date = new Date()
-    const [years, setYears] = useState(["2023", "2024"])
-    const [months, setMonths] = useState(["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"])
-    const [month, setMonth] = useState(date.getMonth())
+    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    const years = ["2023", "2024"]
+    const [selectedYear, setYear] = useState(date.getFullYear().toString());
+    const [selectedMonth, setMonth] = useState((date.getMonth()).toString());
+
+
+    const [monthlyLogs, setMonthlyLogs] = useState([]);
+    const [grandTotal, setGrandTotal] = useState(0);
+    
+    const handleMonthChange = (index, value) => {
+        console.log('Selected Month:',value);
+
+        setMonth(value);
+        fetchData(value, selectedMonth);
+      };
+
+    const handleYearChange = (index, value) => {
+        console.log('Selected Year:', value);
+
+        setYear(value);
+        fetchData(value, selectedYear);
+        };
+
+
+    const fetchData = (selectedMonth, selectedYear) => {
+        console.log('Fetching data for:', selectedMonth, selectedYear);
+        axios.get(`https://dynamic-routes-f4txc.ondigitalocean.app/monthlyLog/${selectedMonth}/${selectedYear}`)
+        .then(response => {
+            setMonthlyLogs(response.data);           
+            const grandTotal = response.data.reduce((acc, log) => {
+                
+                const comm = log.commercial_revenue;
+                const member = log.member_revenue;
+                const privateRevenue = log.private_member_revenue;
+                const logTotal = comm + member + privateRevenue;
+                return acc + logTotal;
+              }, 0);
+              
+              setGrandTotal(grandTotal);
+              
+          })
+
+        .catch(error => {
+            console.error(('Error fetching data'), error);
+        })
+    }   
+
+    useEffect(() => {
+        console.log("Fetching data for:", selectedMonth, selectedYear);
+        fetchData(selectedMonth, selectedYear);
+      }, [selectedMonth, selectedYear]);
     
     return(
         <View style={styles.container}>
@@ -22,26 +72,41 @@ export default function MonthlyLog({navigation}) {
                 <SelectDropdown
                     data = {months}
                     buttonStyle={styles.monthButton}
-                    defaultButtonText={months[month]}
+                    defaultButtonText={selectedMonth}
                     buttonTextStyle={{
                         fontFamily: 'Montserrat'
                     }}
                     dropdownStyle={{
-                        borderRadius: 20
+                        borderRadius: 10,
+                        fontFamily: 'Montserrat'
                     }}
+                    onSelect={(index, value) => handleMonthChange(index,value)}
+
+                    buttonTextAfterSelection={(selectedItem, index) => {
+                        return selectedItem
+                    }}
+
+                    
                 />
                 <SelectDropdown
                     data = {years}
                     buttonStyle={styles.yearButton}
-                    defaultButtonText={date.getFullYear()}
+                    defaultButtonText={selectedYear}
                     buttonTextStyle={{
                         fontFamily: 'Montserrat'
                     }}
                     dropdownStyle={{
-                        borderRadius: 20
+                        borderRadius: 10,
+                        fontFamily: 'Montserrat'
+                    }}
+
+                    onSelect={(index, value) => handleYearChange(value)}
+                    buttonTextAfterSelection={(selectedItem, index) => {
+                        return selectedItem
                     }}
                 />
             </View>
+
             <ScrollView style={styles.table} stickyHeaderIndices={[0]}>
                 <View>
                     <View style={styles.tableHead}>
@@ -49,34 +114,22 @@ export default function MonthlyLog({navigation}) {
                         <Text style={styles.tableHeadText}>Comm</Text>
                         <Text style={styles.tableHeadText}>Member</Text>
                         <Text style={styles.tableHeadText}>Private</Text>
-                        <Text style={styles.tableHeadText}>Total</Text>
+                        <Text style={styles.tableHeadTextv2}>TOTAL</Text>
                     </View>
                 </View>
-                <View style={styles.tableEntry}>
-                    <Text style={styles.tableEntryText}>01/10/23</Text>
-                    <Text style={styles.tableEntryText}>523KM</Text>
-                    <Text style={styles.tableEntryText}>300KM</Text>
-                    <Text style={styles.tableEntryText}>700KM</Text>
-                    <Text style={styles.tableEntryText}>1500KM</Text>
-                </View>
-                <View style={styles.tableEntry}>
-                    <Text style={styles.tableEntryText}>01/10/23</Text>
-                    <Text style={styles.tableEntryText}>523KM</Text>
-                    <Text style={styles.tableEntryText}>300KM</Text>
-                    <Text style={styles.tableEntryText}>700KM</Text>
-                    <Text style={styles.tableEntryText}>1500KM</Text>
-                </View>
-                <View style={styles.tableEntry}>
-                    <Text style={styles.tableEntryText}>01/10/23</Text>
-                    <Text style={styles.tableEntryText}>523KM</Text>
-                    <Text style={styles.tableEntryText}>300KM</Text>
-                    <Text style={styles.tableEntryText}>700KM</Text>
-                    <Text style={styles.tableEntryText}>1500KM</Text>
-                </View>
+                {monthlyLogs.map((log) => (
+                    <View style={styles.tableEntry} key={log.id}>
+                        <Text style={styles.tableDate}>{log.day.split(' ')[0]}</Text>
+                        <Text style={styles.tableEntryText}>{log.commercial_revenue}</Text>
+                        <Text style={styles.tableEntryText}>{log.member_revenue}</Text>
+                        <Text style={styles.tableEntryText}>{log.private_member_revenue}</Text>
+                        <Text style={styles.tableEntryText}>{log.commercial_revenue+log.member_revenue+log.private_member_revenue}KM</Text>
+                    </View>
+                ))}
             </ScrollView>
             <View style={styles.tableFooter}>
                 <Text style={{fontSize: 15, fontFamily: 'Montserrat-Bold'}}>TOTAL:</Text>
-                <Text style={{fontSize: 15, fontFamily: 'Montserrat'}}>90KM</Text>
+                <Text style={{fontSize: 15, fontFamily: 'Montserrat'}}>{grandTotal}KM</Text>
             </View>
         </View>
     )
@@ -99,7 +152,9 @@ export const styles = StyleSheet.create({
         height: 100,
         marginTop: 50,
         marginLeft: 30
+
     },
+
     headerText:{
         fontSize: 25,
         color: 'white',
@@ -107,25 +162,33 @@ export const styles = StyleSheet.create({
         justifyContent: 'center',
         paddingTop: 13,
         fontFamily: 'Montserrat',
+        
     },
+
     dropdowns:{
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
-        width: 340
+        width: 340,
     },
+
     monthButton:{
         borderRadius: 20,
         height: 36,
         width: 140,
         marginRight: 10,
+        
+        
     },
+    
     yearButton:{
         borderRadius: 20,
         height: 36,
         width: 140,
         marginLeft: 10
     },
+
+
     table:{
         backgroundColor: 'white',
         marginTop: 50,
@@ -144,13 +207,23 @@ export const styles = StyleSheet.create({
         paddingBottom: 10,
         paddingTop: 10,
         backgroundColor: 'white'
+        
     },
+
     tableHeadText: {
         display: 'flex',
-        width: '25%',
+        width: '20%',
         textAlign: 'center',
-        fontSize: 15,
+        fontSize: 12,
         fontFamily: 'Montserrat',
+        color: '#676767'
+    },
+    tableHeadTextv2: {
+        display: 'flex',
+        width: '20%',
+        textAlign: 'center',
+        fontSize: 12,
+        fontFamily: 'Montserrat-Bold',
         color: '#676767'
     },
     tableEntry: {
@@ -164,11 +237,21 @@ export const styles = StyleSheet.create({
         borderBottomWidth: 1
     },
     tableEntryText: {
-        width: '25%',
+        width: '20%',
         textAlign: 'center',
         fontFamily: 'Montserrat',
         fontSize: 15,
+        paddingRight: 10,
     },
+
+    tableDate:{
+        width: '22.3%',
+        textAlign: 'center',
+        fontFamily: 'Montserrat',
+        fontSize: 15,
+        
+    },
+
     tableFooter: {
         width: '100%',
         display: 'flex',
@@ -182,4 +265,6 @@ export const styles = StyleSheet.create({
         borderTopColor: '#C0C0C0',
         borderTopWidth: 1,
     },
+    
+
 })

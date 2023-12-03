@@ -1,21 +1,38 @@
 import { useState, useEffect } from "react"
 import { StyleSheet, View, ScrollView, Text, Image } from "react-native"
+import axios, { Axios } from "axios";
 import useCustomFonts from "../assets/fonts/expo-fonts"
-import axios from "axios"
 
 export default function AnnualLog({navigation}) {
     const [fontLoaded, setFontLoaded] = useState(false)
-    const [annaul, setAnnual] = useState([])
+    const [annual, setAnnual] = useState([])
+    
+    const [grandTotal, setGrandTotal] = useState(0)
 
     useEffect(() => {
         useCustomFonts().then(() => {
           setFontLoaded(true)
         })
-      }, [])
+        
+        axios.get('https://dynamic-routes-f4txc.ondigitalocean.app/annualLog')
+            .then(response => {
+                setAnnual(response.data)
+                const total = response.data.reduce((acc, log) => acc + log.commercial_revenue + log.private_member_revenue + log.member_revenue, 0)
+                setGrandTotal(total);
+            })
 
+            .catch(response => {
+                console.error('Error fetching data');
+            })
+    
+    
+    }, [])
+  
       if (!fontLoaded) {
         return null
       }
+
+
 
     return(
         <View style={styles.container}>
@@ -36,23 +53,21 @@ export default function AnnualLog({navigation}) {
                         <Text style={styles.tableHeadTextv2}>TOTAL</Text>
                     </View>
                 </View>
-                {
-                    annaul.map((item, index) => {
-                        return(
-                        <View style={styles.tableEntry} key={index}>
-                            <Text style={styles.tableEntryText}>{item.year}</Text>
-                            <Text style={styles.tableEntryText}>{item.commercialRev}KM</Text>
-                            <Text style={styles.tableEntryText}>{item.memberRev}KM</Text>
-                            <Text style={styles.tableEntryText}>{item.privateRev}KM</Text>
-                            <Text style={styles.tableEntryText}>{item.total}KM</Text>
-                        </View>
-                        )
-                    })
-                }
+                
+                {annual.map((log) => (
+                    <View style={styles.tableEntry} key={log.id}>
+                        <Text style={styles.tableEntryText}>{log.year}</Text>
+                        <Text style={styles.tableEntryText}>{log.commercial_revenue}KM</Text>
+                        <Text style={styles.tableEntryText}>{log.member_revenue}KM</Text>
+                        <Text style={styles.tableEntryText}>{log.private_member_revenue}KM</Text>
+                        <Text style={styles.tableEntryText}>{log.commercial_revenue + log.private_member_revenue + log.member_revenue}KM</Text>
+                    </View>
+                ))}
+
             </ScrollView>
             <View style={styles.tableFooter}>
                 <Text style={{fontSize: 15, fontFamily: 'Montserrat-Bold'}}>TOTAL:</Text>
-                <Text style={{fontSize: 15, fontFamily: 'Montserrat-Bold'}}>2800KM</Text>
+                <Text style={{fontSize: 15, fontFamily: 'Montserrat-Bold'}}>{grandTotal}KM</Text>
             </View>
         </View>
     )

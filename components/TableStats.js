@@ -2,22 +2,37 @@ import { VictoryAxis, VictoryBar, VictoryChart, VictoryGroup } from 'victory-nat
 import  useCustomFonts  from '../assets/fonts/expo-fonts';
 import { useEffect, useState } from "react";
 import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions } from 'react-native';
-const data = {
-    labels: [
-        {x: '1', y: Math.random()*10},
-        {x: '2', y: Math.random()*10},
-        {x: '3', y: Math.random()*10},
-        {x: '4', y: Math.random()*10},
-        {x: '5', y: Math.random()*10},
-        {x: '6', y: Math.random()*10},
-        {x: '7', y: Math.random()*10},
-        {x: '8', y: Math.random()*10},
-        {x: '9', y: Math.random()*10},
-        {x: '10', y: Math.random()*10}
 
-    ],
-   
+const [tableData, setTableData] = useState([]);
+
+
+const fetchData = (selectedTable) => {
+    useEffect(() => {
+        axios.get(`https://dynamic-routes-f4txc.ondigitalocean.app/table/${selectedTable}`)
+        .then(response=>{
+            const cumulativeRevenue = response.data.map((table, index, array) => ({
+                tableNumber: table.tableNumber,
+                cumulativeRevenue: array.slice(0, index + 1).reduce((acc, curr) => acc + curr.total_revenue, 0),
+              }));
+              
+            setTableData(cumulativeRevenue);
+            console.log(response.data)
+        })
+        
+        .catch( error => {
+            console.error('Error fetching data')
+        }
+
+        )
+    }, [selectedTable])
+}
+
+
+const chartData = {
+    labels: tableData.map((table) => ({ x: `${table.tableNumber}`, y: table.total_revenue })),
   };
+
+
 
 export default function TableStats({navigation}) {
     return(
@@ -30,6 +45,7 @@ export default function TableStats({navigation}) {
 
                 <Text style={styles.headerText}>TABLE STATS</Text>
             </View>
+
             <View style={styles.chartContainer}>
                 <Text style={styles.containerText}>TABLE REVENUE</Text>
                <VictoryChart>
@@ -46,8 +62,10 @@ export default function TableStats({navigation}) {
                         >                             
                         </VictoryBar>
                     </VictoryGroup>
-               </VictoryChart>   
-            </View>
+               </VictoryChart>
+                             
+            </View> 
+
         </View>
     )
 }
@@ -58,8 +76,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#201E21',
         width: '100%',
         height: '100%',
-        display: 'flex',
-        alignItems: 'center'
+        display: 'flex'
     },
     header: {
         display: 'flex',
@@ -68,13 +85,19 @@ const styles = StyleSheet.create({
         width: '100%',
         height: '20%',
         alignItems: 'center',
+        
+        
+        
     },
+
     headerText:{
+        
         color: 'white',
         fontSize: 30,
         paddingLeft: 10,
         fontFamily:'Montserrat'
     }, 
+    
     chartContainer:{
         borderWidth: 1, 
         borderRadius: 10, 
@@ -89,8 +112,12 @@ const styles = StyleSheet.create({
         width: 370,
         height: 400
     },
+
     containerText:{
         fontSize: 25,
         fontFamily: 'Montserrat'
     }
+
+   
+   
 })
