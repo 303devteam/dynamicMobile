@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import useCustomFonts from "../assets/fonts/expo-fonts";
 import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity } from 'react-native';

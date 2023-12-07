@@ -6,27 +6,30 @@ import { ScrollView } from "react-native";
 import axios, { Axios } from "axios";
 
 export default function DailyLog({navigation}) {
-    
-
-   
+    const [fontLoaded, setFontLoaded] = useState(false)
     const [dailyLogs, setDailyLogs] = useState([]);
-
     const [dailyTotal, setDailyTotal] = useState([]);
 
     useEffect(() =>{
+        useCustomFonts().then(() => {
+            setFontLoaded(true)
+          })
+          
         axios.get('https://dynamic-routes-f4txc.ondigitalocean.app/dailyLog')
             .then(response => {
-                console.log('API Response:', response.data);
                 setDailyLogs(response.data);
-
-                const total = response.data.reduce((acc, log) => acc + log.revenue, 0)
-                setDailyTotal(total);
+                if(dailyLogs.length > 0) {
+                    setDailyTotal(response.data.reduce((acc, log) => acc + log.revenue, 0))
+                }
             })
-
             .catch(response => {
                 console.error('Error fetching data');
             })
     })
+
+    if (!fontLoaded) {
+        return null
+      }
     
 
     return(
@@ -48,12 +51,12 @@ export default function DailyLog({navigation}) {
                     </View>
                 </View>
                 {dailyLogs.map(log => ( 
-                <View style={styles.tableEntry} key={log.id}>
-                    <Text style={styles.tableEntryText}>{log.table_id}</Text>
-                    <Text style={styles.tableEntryText}>{log.game_time}</Text>
-                    <Text style={styles.tableEntryText}>{log.player_type}</Text>
-                    <Text style={styles.tableEntryText}>{log.revenue}KM</Text>
-                </View>
+                    <View style={styles.tableEntry} key={log.id}>
+                        <Text style={styles.tableEntryText}>{log.table_id}</Text>
+                        <Text style={styles.tableEntryText}>{log.game_time}</Text>
+                        <Text style={styles.tableEntryText}>{log.player_type}</Text>
+                        <Text style={styles.tableEntryText}>{log.revenue}KM</Text>
+                    </View>
                 ))}
             </ScrollView>
             <View style={styles.tableFooter}>

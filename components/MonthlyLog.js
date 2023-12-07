@@ -2,63 +2,42 @@ import { useState, useEffect } from "react";
 import { StyleSheet, View, ScrollView, Text, Image } from "react-native"
 import SelectDropdown from "react-native-select-dropdown";
 import axios, { Axios } from "axios";
-
+import useCustomFonts from "../assets/fonts/expo-fonts"
 
 
 export default function MonthlyLog({navigation}) {
     const date = new Date()
     const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     const years = ["2023", "2024"]
-    const [selectedYear, setYear] = useState(date.getFullYear().toString());
-    const [selectedMonth, setMonth] = useState((date.getMonth()).toString());
-
-
-    const [monthlyLogs, setMonthlyLogs] = useState([]);
-    const [grandTotal, setGrandTotal] = useState(0);
-    
-    const handleMonthChange = (index, value) => {
-        console.log('Selected Month:',value);
-
-        setMonth(value);
-        fetchData(value, selectedMonth);
-      };
-
-    const handleYearChange = (index, value) => {
-        console.log('Selected Year:', value);
-
-        setYear(value);
-        fetchData(value, selectedYear);
-        };
-
-
-    const fetchData = (selectedMonth, selectedYear) => {
-        console.log('Fetching data for:', selectedMonth, selectedYear);
-        axios.get(`https://dynamic-routes-f4txc.ondigitalocean.app/monthlyLog/${selectedMonth}/${selectedYear}`)
-        .then(response => {
-            setMonthlyLogs(response.data);           
-            const grandTotal = response.data.reduce((acc, log) => {
-                
-                const comm = log.commercial_revenue;
-                const member = log.member_revenue;
-                const privateRevenue = log.private_member_revenue;
-                const logTotal = comm + member + privateRevenue;
-                return acc + logTotal;
-              }, 0);
-              
-              setGrandTotal(grandTotal);
-              
-          })
-
-        .catch(error => {
-            console.error(('Error fetching data'), error);
-        })
-    }   
+    const [selectedYear, setYear] = useState(date.getFullYear());
+    const [selectedMonth, setMonth] = useState((date.getMonth()+1));
+    const [monthlyLog, setMontlyLog] = useState([])
+    const [grandTotal, setGrandTotal] = useState(0)
+    const [fontLoaded, setFontLoaded] = useState(false)
 
     useEffect(() => {
-        console.log("Fetching data for:", selectedMonth, selectedYear);
-        fetchData(selectedMonth, selectedYear);
-      }, [selectedMonth, selectedYear]);
-    
+        useCustomFonts().then(() => {
+            setFontLoaded(true)
+          })
+        const formattedMonth = String(selectedMonth).padStart(2, '0');
+        axios.get(`https://dynamic-routes-f4txc.ondigitalocean.app/monthlyLog/${formattedMonth}/${selectedYear}`)
+        .then(response => {
+            setMontlyLog(response.data)
+            console.log(selectedMonth, selectedYear)
+            const total = response.data.reduce((acc, log) => acc + log.commercial_revenue + log.private_member_revenue + log.member_revenue, 0)
+            setGrandTotal(total);
+            
+        }).catch(error => {
+            console.log('oh ne')
+        })
+    }, [ , selectedMonth, selectedYear])
+
+    if (!fontLoaded) {
+        return null
+      }
+
+
+
     return(
         <View style={styles.container}>
             <View style={styles.header}>
@@ -72,7 +51,7 @@ export default function MonthlyLog({navigation}) {
                 <SelectDropdown
                     data = {months}
                     buttonStyle={styles.monthButton}
-                    defaultButtonText={selectedMonth}
+                    defaultButtonText={months[selectedMonth-1]}
                     buttonTextStyle={{
                         fontFamily: 'Montserrat'
                     }}
@@ -80,13 +59,9 @@ export default function MonthlyLog({navigation}) {
                         borderRadius: 10,
                         fontFamily: 'Montserrat'
                     }}
-                    onSelect={(index, value) => handleMonthChange(index,value)}
-
-                    buttonTextAfterSelection={(selectedItem, index) => {
-                        return selectedItem
+                    onSelect={(selectedMonth, index) => {
+                        setMonth(index + 1)
                     }}
-
-                    
                 />
                 <SelectDropdown
                     data = {years}
@@ -99,10 +74,8 @@ export default function MonthlyLog({navigation}) {
                         borderRadius: 10,
                         fontFamily: 'Montserrat'
                     }}
-
-                    onSelect={(index, value) => handleYearChange(value)}
-                    buttonTextAfterSelection={(selectedItem, index) => {
-                        return selectedItem
+                    onSelect={(selectedYear, index) => {
+                        setYear(parseInt(selectedYear))
                     }}
                 />
             </View>
@@ -117,7 +90,7 @@ export default function MonthlyLog({navigation}) {
                         <Text style={styles.tableHeadTextv2}>TOTAL</Text>
                     </View>
                 </View>
-                {monthlyLogs.map((log) => (
+                {monthlyLog.map((log) => (
                     <View style={styles.tableEntry} key={log.id}>
                         <Text style={styles.tableDate}>{log.day.split(' ')[0]}</Text>
                         <Text style={styles.tableEntryText}>{log.commercial_revenue}</Text>
