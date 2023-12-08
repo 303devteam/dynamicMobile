@@ -23,7 +23,8 @@ export default function MonthlyLog({navigation}) {
         axios.get(`https://dynamic-routes-f4txc.ondigitalocean.app/monthlyLog/${formattedMonth}/${selectedYear}`)
         .then(response => {
             setMontlyLog(response.data)
-            console.log(selectedMonth, selectedYear)
+            console.log(formattedMonth, selectedYear)
+            console.dir(response.data)
             const total = response.data.reduce((acc, log) => acc + log.commercial_revenue + log.private_member_revenue + log.member_revenue, 0)
             setGrandTotal(total);
             
