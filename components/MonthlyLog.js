@@ -144,6 +144,7 @@ export const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         width: 340,
+       
     },
 
     monthButton:{
@@ -159,7 +160,8 @@ export const styles = StyleSheet.create({
         borderRadius: 20,
         height: 36,
         width: 140,
-        marginLeft: 10
+        marginLeft: 10,
+        
     },
 
 
