@@ -2,16 +2,29 @@ import { useState, useEffect } from 'react';
 import useCustomFonts from "../assets/fonts/expo-fonts";
 import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity } from 'react-native';
 import { Dialog } from '@rneui/themed';
+import axios, { Axios } from "axios";
+
 
 
 export default function Tables({navigation}) {
     const [fontLoaded, setFontLoaded] = useState(false)
     const [open, setOpen] = useState(false)
+    const [status, setStatus] = useState('Free')
 
     useEffect(() => {
-      useCustomFonts().then(() => {
-        setFontLoaded(true)
-      })
+        for (let i = 1; i <= 10; i++) {
+        axios.get(`https://dynamic-routes-f4txc.ondigitalocean.app/table/${i}`)
+            .then((response) => {
+                console.log(response.data.status)
+                setStatus(response.data.status)
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+        }
+        useCustomFonts().then(() => {
+            setFontLoaded(true)
+        })
     }, [])
 
     if (!fontLoaded) {
@@ -38,18 +51,9 @@ export default function Tables({navigation}) {
                                     <Text style={styles.squareText}>Table: {index + 1}</Text>
                                 </View>
                                 <View style={styles.circle}></View>
-                                <Text style={styles.availabilityText}>Free</Text>
+                                <Text style={styles.availabilityText}>{status === 'occupied' ? 'Occupied' : 'Free'}</Text>
                             </TouchableOpacity>
-                            <Dialog
-                                isVisible={open === index +1}
-                                onBackdropPress={() => setOpen(false)}
-                                overlayStyle={styles.modal}
-                            >
-                                <Text style={styles.dialogTitle}>Table: {index + 1}</Text>
-                                <Text style={styles.dialogText}>Player Type: </Text>
-                                <Text style={styles.dialogText}>Timer: </Text>
-                                <Text style={styles.dialogText}>Revenue:  </Text>
-                            </Dialog>
+                            
                         </View>
                     ))}
             </ScrollView>
