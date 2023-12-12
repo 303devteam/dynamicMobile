@@ -93,11 +93,11 @@ export default function MonthlyLog({navigation}) {
                 </View>
                 {monthlyLog.map((log) => (
                     <View style={styles.tableEntry} key={log.id}>
-                        <Text style={styles.tableDate}>{log.day.split(' ')[0]}</Text>
-                        <Text style={styles.tableEntryText}>{log.commercial_revenue}</Text>
-                        <Text style={styles.tableEntryText}>{log.member_revenue}</Text>
-                        <Text style={styles.tableEntryText}>{log.private_member_revenue}</Text>
-                        <Text style={styles.tableEntryText}>{log.commercial_revenue+log.member_revenue+log.private_member_revenue}KM</Text>
+                        <Text style={styles.tableEntryText}>{log.day.split(' ')[0]}</Text>
+                        <Text style={styles.tableEntryText}>{(log.commercial_revenue).toFixed(2)}</Text>
+                        <Text style={styles.tableEntryText}>{(log.member_revenue).toFixed(2)}</Text>
+                        <Text style={styles.tableEntryText}>{(log.private_member_revenue).toFixed(2)}</Text>
+                        <Text style={styles.tableEntryText}>{(log.commercial_revenue + log.member_revenue + log.private_member_revenue).toFixed(2)}KM</Text>
                     </View>
                 ))}
             </ScrollView>
