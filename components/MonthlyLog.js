@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
 import { StyleSheet, View, ScrollView, Text, Image } from "react-native"
 import SelectDropdown from "react-native-select-dropdown";
-import axios, { Axios } from "axios";
+import axios from "axios";
 import useCustomFonts from "../assets/fonts/expo-fonts"
 
 
 export default function MonthlyLog({navigation}) {
     const date = new Date()
     const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-    const years = ["2023", "2024"]
+    const years = ["2023", "2024", "2025", "2026"]
     const [selectedYear, setYear] = useState(date.getFullYear());
     const [selectedMonth, setMonth] = useState((date.getMonth()+1));
     const [monthlyLog, setMontlyLog] = useState([])
@@ -19,25 +19,21 @@ export default function MonthlyLog({navigation}) {
         useCustomFonts().then(() => {
             setFontLoaded(true)
           })
+
         const formattedMonth = String(selectedMonth).padStart(2, '0');
         axios.get(`https://dynamic-routes-f4txc.ondigitalocean.app/monthlyLog/${formattedMonth}/${selectedYear}`)
         .then(response => {
             setMontlyLog(response.data)
-            console.log(formattedMonth, selectedYear)
-            console.dir(response.data)
             const total = response.data.reduce((acc, log) => acc + log.commercial_revenue + log.private_member_revenue + log.member_revenue, 0)
             setGrandTotal(total);
-            
         }).catch(error => {
-            console.log('oh ne')
+            console.log('Error fetching data')
         })
-    }, [ , selectedMonth, selectedYear])
+    }, [ ,selectedMonth, selectedYear])
 
     if (!fontLoaded) {
         return null
       }
-
-
 
     return(
         <View style={styles.container}>
@@ -80,7 +76,6 @@ export default function MonthlyLog({navigation}) {
                     }}
                 />
             </View>
-
             <ScrollView style={styles.table} stickyHeaderIndices={[0]}>
                 <View>
                     <View style={styles.tableHead}>
@@ -94,16 +89,16 @@ export default function MonthlyLog({navigation}) {
                 {monthlyLog.map((log) => (
                     <View style={styles.tableEntry} key={log.id}>
                         <Text style={styles.tableDate}>{log.day.split(' ')[0]}</Text>
-                        <Text style={styles.tableEntryText}>{log.commercial_revenue}</Text>
-                        <Text style={styles.tableEntryText}>{log.member_revenue}</Text>
-                        <Text style={styles.tableEntryText}>{log.private_member_revenue}</Text>
-                        <Text style={styles.tableEntryText}>{log.commercial_revenue+log.member_revenue+log.private_member_revenue}KM</Text>
+                        <Text style={styles.tableEntryText}>{(log.commercial_revenue).toFixed(2)}KM</Text>
+                        <Text style={styles.tableEntryText}>{(log.member_revenue).toFixed(2)}KM</Text>
+                        <Text style={styles.tableEntryText}>{(log.private_member_revenue).toFixed(2)}KM</Text>
+                        <Text style={styles.tableEntryText}>{(log.commercial_revenue+log.member_revenue+log.private_member_revenue).toFixed(2)}KM</Text>
                     </View>
                 ))}
             </ScrollView>
             <View style={styles.tableFooter}>
                 <Text style={{fontSize: 15, fontFamily: 'Montserrat-Bold'}}>TOTAL:</Text>
-                <Text style={{fontSize: 15, fontFamily: 'Montserrat'}}>{grandTotal}KM</Text>
+                <Text style={{fontSize: 15, fontFamily: 'Montserrat'}}>{(grandTotal).toFixed(2)}KM</Text>
             </View>
         </View>
     )
@@ -126,9 +121,7 @@ export const styles = StyleSheet.create({
         height: 100,
         marginTop: 50,
         marginLeft: 30
-
     },
-
     headerText:{
         fontSize: 25,
         color: 'white',
@@ -136,33 +129,25 @@ export const styles = StyleSheet.create({
         justifyContent: 'center',
         paddingTop: 13,
         fontFamily: 'Montserrat',
-        
     },
-
     dropdowns:{
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
         width: 340,
     },
-
     monthButton:{
         borderRadius: 20,
         height: 36,
         width: 140,
         marginRight: 10,
-        
-        
     },
-    
     yearButton:{
         borderRadius: 20,
         height: 36,
         width: 140,
         marginLeft: 10
     },
-
-
     table:{
         backgroundColor: 'white',
         marginTop: 50,
@@ -181,9 +166,7 @@ export const styles = StyleSheet.create({
         paddingBottom: 10,
         paddingTop: 10,
         backgroundColor: 'white'
-        
     },
-
     tableHeadText: {
         display: 'flex',
         width: '20%',
@@ -214,18 +197,15 @@ export const styles = StyleSheet.create({
         width: '20%',
         textAlign: 'center',
         fontFamily: 'Montserrat',
-        fontSize: 15,
+        fontSize: 12,
         paddingRight: 10,
     },
-
     tableDate:{
         width: '22.3%',
         textAlign: 'center',
         fontFamily: 'Montserrat',
-        fontSize: 15,
-        
+        fontSize: 14,
     },
-
     tableFooter: {
         width: '100%',
         display: 'flex',
@@ -239,6 +219,4 @@ export const styles = StyleSheet.create({
         borderTopColor: '#C0C0C0',
         borderTopWidth: 1,
     },
-    
-
 })

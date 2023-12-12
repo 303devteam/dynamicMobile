@@ -3,12 +3,12 @@ import { StyleSheet } from "react-native";
 import useCustomFonts from "../assets/fonts/expo-fonts";
 import { useEffect, useState } from "react";
 import { ScrollView } from "react-native";
-import axios, { Axios } from "axios";
+import axios from "axios";
 
 export default function DailyLog({navigation}) {
     const [fontLoaded, setFontLoaded] = useState(false)
     const [dailyLogs, setDailyLogs] = useState([]);
-    const [dailyTotal, setDailyTotal] = useState([]);
+    let dailyTotal = 0
 
     useEffect(() =>{
         useCustomFonts().then(() => {
@@ -18,14 +18,11 @@ export default function DailyLog({navigation}) {
         axios.get('https://dynamic-routes-f4txc.ondigitalocean.app/dailyLog')
             .then(response => {
                 setDailyLogs(response.data);
-                if(dailyLogs.length > 0) {
-                    setDailyTotal(response.data.reduce((acc, log) => acc + log.revenue, 0))
-                }
             })
             .catch(response => {
                 console.error('Error fetching data');
             })
-    })
+    }, [])
 
     if (!fontLoaded) {
         return null
@@ -50,18 +47,21 @@ export default function DailyLog({navigation}) {
                         <Text style={styles.tableHeadText}>Revenue</Text>
                     </View>
                 </View>
-                {dailyLogs.map(log => ( 
-                    <View style={styles.tableEntry} key={log.id}>
-                        <Text style={styles.tableEntryText}>{log.table_id}</Text>
-                        <Text style={styles.tableEntryText}>{log.game_time}</Text>
-                        <Text style={styles.tableEntryText}>{log.player_type}</Text>
-                        <Text style={styles.tableEntryText}>{log.revenue}KM</Text>
-                    </View>
-                ))}
+                {dailyLogs.map((log, index) => {
+                    dailyTotal += log.revenue
+                    return (
+                        <View style={styles.tableEntry} key={log.id}>
+                            <Text style={styles.tableEntryText}>{log.table_id}</Text>
+                            <Text style={styles.tableEntryText}>{log.game_time}</Text>
+                            <Text style={styles.tableEntryText}>{log.player_type}</Text>
+                            <Text style={styles.tableEntryText}>{(log.revenue).toFixed(2)}KM</Text>
+                        </View>
+                        )
+                    })}
             </ScrollView>
             <View style={styles.tableFooter}>
                 <Text style={{fontSize: 15, fontFamily: 'Montserrat-Bold'}}>TOTAL:</Text>
-                <Text style={{fontSize: 15, fontFamily: 'Montserrat'}}>{dailyTotal}KM</Text>
+                <Text style={{fontSize: 15, fontFamily: 'Montserrat'}}>{(dailyTotal).toFixed(2)}KM</Text>
             </View>
         </View>
     )

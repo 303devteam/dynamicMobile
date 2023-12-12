@@ -1,27 +1,16 @@
 import { useState, useEffect } from 'react';
 import useCustomFonts from "../assets/fonts/expo-fonts";
 import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity } from 'react-native';
-import { Dialog } from '@rneui/themed';
-import axios, { Axios } from "axios";
-
-
+import axios from "axios";
 
 export default function Tables({navigation}) {
     const [fontLoaded, setFontLoaded] = useState(false)
-    const [open, setOpen] = useState(false)
-    const [status, setStatus] = useState('Free')
+    const [tables, setTables] = useState([])
 
     useEffect(() => {
-        for (let i = 1; i <= 10; i++) {
-        axios.get(`https://dynamic-routes-f4txc.ondigitalocean.app/table/${i}`)
-            .then((response) => {
-                console.log(response.data.status)
-                setStatus(response.data.status)
-            })
-            .catch((error) => {
-                console.log(error)
-            })
-        }
+        axios.get('https://dynamic-routes-f4txc.ondigitalocean.app/tables').then(res => {
+            setTables(res.data)
+        })
         useCustomFonts().then(() => {
             setFontLoaded(true)
         })
@@ -46,12 +35,23 @@ export default function Tables({navigation}) {
                             <TouchableOpacity
                                 activeOpacity={0.7}
                                 style={styles.button}
-                                onPress={() => setOpen(index + 1)}>
+                            >
                                 <View style={styles.textContainer}>
                                     <Text style={styles.squareText}>Table: {index + 1}</Text>
                                 </View>
-                                <View style={styles.circle}></View>
-                                <Text style={styles.availabilityText}>{status === 'occupied' ? 'Occupied' : 'Free'}</Text>
+                                {
+                                    tables[index]?.status == 'Free' ? (
+                                        <>
+                                            <View style={styles.circle}></View>
+                                            <Text style={styles.availabilityText}>Free</Text>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <View style={styles.circle2}></View>
+                                            <Text style={styles.availabilityText2}>Occupied</Text>
+                                        </>
+                                    )
+                                }
                             </TouchableOpacity>
                             
                         </View>
@@ -126,6 +126,24 @@ const styles = StyleSheet.create({
         paddingRight: 20,
         color: 'green',
         fontFamily: 'Montserrat'
+    },
+    availabilityText2:{
+        fontSize: 14,
+        paddingTop: 20,
+        paddingLeft: 10,
+        paddingRight: 20,
+        color: 'red',
+        fontFamily: 'Montserrat'
+    },
+    circle2:{
+        height: 8,
+        width: 8,
+        borderRadius: 4,
+        backgroundColor: 'red',
+        marginLeft: 150,
+        marginTop: 26,
+        textAlign: "center",
+        justifyContent: "center",   
     },
     modal: {
         display: 'flex',

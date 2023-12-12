@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react"
 import { StyleSheet, View, ScrollView, Text, Image } from "react-native"
-import axios, { Axios } from "axios";
+import axios from "axios";
 import useCustomFonts from "../assets/fonts/expo-fonts"
 
 export default function AnnualLog({navigation}) {
     const [fontLoaded, setFontLoaded] = useState(false)
     const [annual, setAnnual] = useState([])
-    
     const [grandTotal, setGrandTotal] = useState(0)
 
     useEffect(() => {
@@ -14,25 +13,18 @@ export default function AnnualLog({navigation}) {
           setFontLoaded(true)
         })
         
-        axios.get('https://dynamic-routes-f4txc.ondigitalocean.app/annualLog')
-            .then(response => {
+        axios.get('https://dynamic-routes-f4txc.ondigitalocean.app/annualLog').then(response => {
                 setAnnual(response.data)
                 const total = response.data.reduce((acc, log) => acc + log.commercial_revenue + log.private_member_revenue + log.member_revenue, 0)
                 setGrandTotal(total);
-            })
-
-            .catch(response => {
+            }).catch(response => {
                 console.error('Error fetching data');
             })
-    
-    
     }, [])
   
       if (!fontLoaded) {
         return null
       }
-
-
 
     return(
         <View style={styles.container}>
@@ -57,17 +49,17 @@ export default function AnnualLog({navigation}) {
                 {annual.map((log) => (
                     <View style={styles.tableEntry} key={log.id}>
                         <Text style={styles.tableEntryText}>{log.year}</Text>
-                        <Text style={styles.tableEntryText}>{log.commercial_revenue}KM</Text>
-                        <Text style={styles.tableEntryText}>{log.member_revenue}KM</Text>
-                        <Text style={styles.tableEntryText}>{log.private_member_revenue}KM</Text>
-                        <Text style={styles.tableEntryText}>{log.commercial_revenue + log.private_member_revenue + log.member_revenue}KM</Text>
+                        <Text style={styles.tableEntryText}>{(log.commercial_revenue).toFixed(2)}KM</Text>
+                        <Text style={styles.tableEntryText}>{(log.member_revenue).toFixed(2)}KM</Text>
+                        <Text style={styles.tableEntryText}>{(log.private_member_revenue).toFixed(2)}KM</Text>
+                        <Text style={styles.tableEntryText}>{(log.commercial_revenue + log.private_member_revenue + log.member_revenue).toFixed(2)}KM</Text>
                     </View>
                 ))}
 
             </ScrollView>
             <View style={styles.tableFooter}>
                 <Text style={{fontSize: 15, fontFamily: 'Montserrat-Bold'}}>TOTAL:</Text>
-                <Text style={{fontSize: 15, fontFamily: 'Montserrat-Bold'}}>{grandTotal}KM</Text>
+                <Text style={{fontSize: 15, fontFamily: 'Montserrat-Bold'}}>{(grandTotal).toFixed(2)}KM</Text>
             </View>
         </View>
     )
@@ -146,7 +138,7 @@ export const styles = StyleSheet.create({
         width: '20%',
         textAlign: 'center',
         fontFamily: 'Montserrat',
-        fontSize: 15,
+        fontSize: 12,
     },
     tableFooter: {
         width: '100%',
@@ -161,5 +153,4 @@ export const styles = StyleSheet.create({
         borderTopColor: '#C0C0C0',
         borderTopWidth: 1,
     }
-
 })
