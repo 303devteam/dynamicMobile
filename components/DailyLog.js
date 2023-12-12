@@ -3,22 +3,35 @@ import { StyleSheet } from "react-native";
 import useCustomFonts from "../assets/fonts/expo-fonts";
 import { useEffect, useState } from "react";
 import { ScrollView } from "react-native";
-import axios from "axios";
+import axios, { Axios } from "axios";
 
 export default function DailyLog({navigation}) {
+    const [fontLoaded, setFontLoaded] = useState(false)
     const [dailyLogs, setDailyLogs] = useState([]);
+    const [dailyTotal, setDailyTotal] = useState([]);
 
     useEffect(() =>{
+        useCustomFonts().then(() => {
+            setFontLoaded(true)
+          })
+          
         axios.get('https://dynamic-routes-f4txc.ondigitalocean.app/dailyLog')
             .then(response => {
                 setDailyLogs(response.data);
+                if(dailyLogs.length > 0) {
+                    setDailyTotal(response.data.reduce((acc, log) => acc + log.revenue, 0))
+                }
             })
-
             .catch(response => {
                 console.error('Error fetching data');
             })
     })
+
+    if (!fontLoaded) {
+        return null
+      }
     
+
     return(
         <View style={styles.container}>
             <View style={styles.header}>
@@ -38,7 +51,7 @@ export default function DailyLog({navigation}) {
                     </View>
                 </View>
                 {dailyLogs.map(log => ( 
-                    <View style={styles.tableEntry}>
+                    <View style={styles.tableEntry} key={log.id}>
                         <Text style={styles.tableEntryText}>{log.table_id}</Text>
                         <Text style={styles.tableEntryText}>{log.game_time}</Text>
                         <Text style={styles.tableEntryText}>{log.player_type}</Text>
@@ -48,7 +61,7 @@ export default function DailyLog({navigation}) {
             </ScrollView>
             <View style={styles.tableFooter}>
                 <Text style={{fontSize: 15, fontFamily: 'Montserrat-Bold'}}>TOTAL:</Text>
-                <Text style={{fontSize: 15, fontFamily: 'Montserrat'}}>90KM</Text>
+                <Text style={{fontSize: 15, fontFamily: 'Montserrat'}}>{dailyTotal}KM</Text>
             </View>
         </View>
     )
