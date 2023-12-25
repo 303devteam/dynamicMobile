@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "dynamic",
-    "slug": "dynamic",
+    "name": "Dynamic",
+    "slug": "Dynamic",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -26,11 +26,7 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    },
-    "extra": {
-      "eas": {
-        "projectId": "53bab7d4-9356-4cc4-ae8e-e06b910d29f8"
-      }
     }
+    
   }
 }
