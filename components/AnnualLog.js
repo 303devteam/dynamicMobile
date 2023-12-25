@@ -57,17 +57,17 @@ export default function AnnualLog({navigation}) {
                 {annual.map((log) => (
                     <View style={styles.tableEntry} key={log.id}>
                         <Text style={styles.tableEntryText}>{log.year}</Text>
-                        <Text style={styles.tableEntryText}>{log.commercial_revenue}KM</Text>
-                        <Text style={styles.tableEntryText}>{log.member_revenue}KM</Text>
-                        <Text style={styles.tableEntryText}>{log.private_member_revenue}KM</Text>
-                        <Text style={styles.tableEntryText}>{log.commercial_revenue + log.private_member_revenue + log.member_revenue}KM</Text>
+                        <Text style={styles.tableEntryText}>{(log.commercial_revenue).toFixed(1)}</Text>
+                        <Text style={styles.tableEntryText}>{(log.member_revenue).toFixed(1)}</Text>
+                        <Text style={styles.tableEntryText}>{(log.private_member_revenue).toFixed(1)}</Text>
+                        <Text style={styles.tableEntryText}>{(log.commercial_revenue + log.private_member_revenue + log.member_revenue).toFixed(2)}</Text>
                     </View>
                 ))}
 
             </ScrollView>
             <View style={styles.tableFooter}>
                 <Text style={{fontSize: 15, fontFamily: 'Montserrat-Bold'}}>TOTAL:</Text>
-                <Text style={{fontSize: 15, fontFamily: 'Montserrat-Bold'}}>{grandTotal}KM</Text>
+                <Text style={{fontSize: 15, fontFamily: 'Montserrat-Bold'}}>{(grandTotal).toFixed(2)}KM</Text>
             </View>
         </View>
     )

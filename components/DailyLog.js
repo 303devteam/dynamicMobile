@@ -8,7 +8,7 @@ import axios, { Axios } from "axios";
 export default function DailyLog({navigation}) {
     const [fontLoaded, setFontLoaded] = useState(false)
     const [dailyLogs, setDailyLogs] = useState([]);
-    const [dailyTotal, setDailyTotal] = useState([]);
+    const [dailyTotal, setDailyTotal] = useState(0);
 
     useEffect(() =>{
         useCustomFonts().then(() => {
@@ -55,13 +55,13 @@ export default function DailyLog({navigation}) {
                         <Text style={styles.tableEntryText}>{log.table_id}</Text>
                         <Text style={styles.tableEntryText}>{log.game_time}</Text>
                         <Text style={styles.tableEntryText}>{log.player_type}</Text>
-                        <Text style={styles.tableEntryText}>{log.revenue}KM</Text>
+                        <Text style={styles.tableEntryText}>{(log.revenue).toFixed(2)}KM</Text>
                     </View>
                 ))}
             </ScrollView>
             <View style={styles.tableFooter}>
                 <Text style={{fontSize: 15, fontFamily: 'Montserrat-Bold'}}>TOTAL:</Text>
-                <Text style={{fontSize: 15, fontFamily: 'Montserrat'}}>{dailyTotal}KM</Text>
+                <Text style={{fontSize: 15, fontFamily: 'Montserrat'}}>{(dailyTotal).toFixed(2)}KM</Text>
             </View>
         </View>
     )

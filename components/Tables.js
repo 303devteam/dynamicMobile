@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import useCustomFonts from "../assets/fonts/expo-fonts";
 import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity } from 'react-native';
-import { Dialog } from '@rneui/themed';
 import axios, { Axios } from "axios";
 
 
@@ -9,57 +8,66 @@ import axios, { Axios } from "axios";
 export default function Tables({navigation}) {
     const [fontLoaded, setFontLoaded] = useState(false)
     const [open, setOpen] = useState(false)
-    const [status, setStatus] = useState('Free')
+    const [tableStatus, setTableStatus] = useState(Array(10).fill('Free'));
 
+    
     useEffect(() => {
-        for (let i = 1; i <= 10; i++) {
-        axios.get(`https://dynamic-routes-f4txc.ondigitalocean.app/table/${i}`)
-            .then((response) => {
-                console.log(response.data.status)
-                setStatus(response.data.status)
-            })
-            .catch((error) => {
-                console.log(error)
-            })
-        }
-        useCustomFonts().then(() => {
-            setFontLoaded(true)
-        })
-    }, [])
+        const fetchData = async () => {
+            try {
+                const responses = await Promise.all(
+                    Array(10).fill().map((_, index) =>
+                        axios.get(`https://dynamic-routes-f4txc.ondigitalocean.app/table/${index + 1}`)
+                    )
+                );
+
+                const statuses = responses.map(response => response.data.status);
+                setTableStatus(statuses);
+            } catch (error) {
+                console.log(error);
+            }
+
+            await useCustomFonts();
+            setFontLoaded(true);
+        };
+
+        fetchData();
+    }, []);
 
     if (!fontLoaded) {
-      return null
+        return null;
     }
 
-    return(
+    return (
         <View style={styles.container}>
             <View style={styles.header}>
-                <Image 
+                <Image
                     source={require('../assets/images/poolTable2.png')}
-                    style={{width: 60, height: 55}}
+                    style={{ width: 60, height: 55 }}
                 />
                 <Text style={styles.headerText}>TABLES</Text>
             </View>
             <ScrollView style={styles.innerContainer}>
                 {Array(10).fill().map((_, index) => (
-                        <View key={index}>
-                            <TouchableOpacity
-                                activeOpacity={0.7}
-                                style={styles.button}
-                                onPress={() => setOpen(index + 1)}>
-                                <View style={styles.textContainer}>
-                                    <Text style={styles.squareText}>Table: {index + 1}</Text>
-                                </View>
-                                <View style={styles.circle}></View>
-                                <Text style={styles.availabilityText}>{status === 'occupied' ? 'Occupied' : 'Free'}</Text>
-                            </TouchableOpacity>
-                            
-                        </View>
-                    ))}
+                    <View key={index}>
+                        <TouchableOpacity
+                            activeOpacity={0.7}
+                            style={styles.button}
+                            onPress={() => setOpen(index + 1)}>
+                            <View style={styles.textContainer}>
+                                <Text style={styles.squareText}>Table: {index + 1}</Text>
+                            </View>
+                            <View style={[styles.circle, { backgroundColor: tableStatus[index] === 'Free' ? 'green' : 'red' }]}></View>
+                            <Text style={[styles.availabilityText, { color: tableStatus[index] === 'Free' ? 'green' : 'red' }]}>
+                                {tableStatus[index] === 'Free' ? 'Free' : 'Occupied'}
+                            </Text>
+                        </TouchableOpacity>
+
+                    </View>
+                ))}
             </ScrollView>
         </View>
     );
-       
+
 }
 
 const styles = StyleSheet.create({

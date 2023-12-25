@@ -97,13 +97,13 @@ export default function MonthlyLog({navigation}) {
                         <Text style={styles.tableEntryText}>{(log.commercial_revenue).toFixed(2)}</Text>
                         <Text style={styles.tableEntryText}>{(log.member_revenue).toFixed(2)}</Text>
                         <Text style={styles.tableEntryText}>{(log.private_member_revenue).toFixed(2)}</Text>
-                        <Text style={styles.tableEntryText}>{(log.commercial_revenue + log.member_revenue + log.private_member_revenue).toFixed(2)}KM</Text>
+                        <Text style={styles.tableEntryText}>{(log.commercial_revenue + log.member_revenue + log.private_member_revenue).toFixed(2)}</Text>
                     </View>
                 ))}
             </ScrollView>
             <View style={styles.tableFooter}>
                 <Text style={{fontSize: 15, fontFamily: 'Montserrat-Bold'}}>TOTAL:</Text>
-                <Text style={{fontSize: 15, fontFamily: 'Montserrat'}}>{grandTotal}KM</Text>
+                <Text style={{fontSize: 15, fontFamily: 'Montserrat'}}>{(grandTotal).toFixed(2)}KM</Text>
             </View>
         </View>
     )
